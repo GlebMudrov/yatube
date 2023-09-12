@@ -1,0 +1,45 @@
+{% load user_filters %}
+{% if user.is_authenticated %}
+  <div class="card my-4">
+    <h5 class="card-header">Добавить комментарий:</h5>
+    <div class="card-body">
+      <form method="post" action="{% url 'posts:add_comment' post.id %}">
+        {% csrf_token %}      
+        <div class="form-group mb-2">
+          {{ form.text|addclass:"form-control" }}
+        </div>
+        <button type="submit" class="btn btn-primary">Отправить</button>
+      </form>
+    </div>
+  </div>
+{% endif %}
+<br>
+{% if user.is_authenticated%}
+  {% if not comments%}
+    <h5>Еще никто не оставил комментарий к посту, но вы можете это исправить &#128521;</h5>
+  {% else %}
+    <h5>Комментарии:</h5>
+    <br>
+    {% for comment in comments %}
+      <div class="media mb-4">
+        <div class="media-body">
+          <a class="btn btn-primary btn-sm"
+            href="{% url 'posts:profile' comment.author.username %}"> {{ comment.author.get_full_name }} 
+          </a>    
+          <button type="submit" class="btn btn-outline-dark btn-sm" disabled>
+            {{ comment.created }}
+          </button>
+          <p>
+            {{ comment.text }}
+          </p>
+        </div>
+      </div>
+    {% endfor %} 
+  {% endif %}
+{% else %}
+  <h5>Комментарии доступны только авторизированным пользователям.</h5>
+  <h5>Желаете 
+  <a href="{% url 'users:signup'%}">
+    зарегистрироваться?
+  </a>  
+{% endif %}

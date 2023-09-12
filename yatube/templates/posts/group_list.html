@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %} {{ group.title }} {% endblock %}
+{% block content %}
+{% load thumbnail %}
+  <h1>Все посты группы {{ group.title }}</h1>
+  <p>{{ group.description|linebreaksbr }}</p>
+  {% for post in page_obj %}
+  {% include 'posts/includes/post_list.html' with skip_group_info=True %}
+  {% endfor %}
+{% include 'posts/includes/paginator.html' %}
+{% endblock %}

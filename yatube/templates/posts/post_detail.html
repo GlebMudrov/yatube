@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}{{ post.text|truncatechars:30 }} {% endblock %}
+{% block content %}
+{% load thumbnail %}
+  <div class="row">
+    <aside class="col-12 col-md-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <a class="btn btn-primary btn-sm"
+            href="{% url 'posts:profile' post.author %}"> {{ post.author.get_full_name }}
+          </a>
+        </li>
+        <li class="list-group-item">
+          <button type="submit" class="btn btn-outline-dark btn-sm" disabled>
+            {{ post.pub_date }}
+          </button>
+        </li>
+        {% if post.group %}
+          <li class="list-group-item">
+              <a class="btn btn-outline-dark btn-sm" href="{% url 'posts:group_list' post.group.slug %}">Все посты группы {{post.group.title}} </a>
+          </li>
+        {% endif %}
+        {% if user == post.author %}
+          <li class="list-group-item">
+            <a class="btn btn-secondary btn-sm" href="{% url 'posts:post_edit' post.id %}">
+              Редактировать пост
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </aside>
+    {% thumbnail post.image "960x339" crop="center" upscale=True as im %}
+      <img class="card-img my-2" src="{{ im.url }}">
+    {% endthumbnail %}
+    <article class="col-12 col-md-9">
+      <p>
+        {{post.text}}
+      </p>
+      {% include 'posts/includes/comment.html' %}
+    </article>
+  </div>
+{% endblock %}
